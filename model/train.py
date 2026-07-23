@@ -96,7 +96,7 @@ def main():
         per_device_eval_batch_size=4,
         weight_decay=0.01,
         save_total_limit=3,
-        num_train_epochs=5,
+        num_train_epochs=3,
         predict_with_generate=True,
         fp16=True, # Note: Set to False if running on CPU or unsupported hardware
         logging_steps=5,
