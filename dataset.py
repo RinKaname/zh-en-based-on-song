@@ -8,7 +8,7 @@ dataset = [
     },
     {
         "source": "加载 Fragment，一点一点，Throughput 怎么样？ (怎么了？接下来呢？)",
-        "target": "Loading fragments, bit by bit, how is the Throughput? (What's wrong? What's next?)"
+        "target": "Loading Fragments, bit by bit. How is the Throughput? (What's wrong? What's next?)"
     },
     {
         "source": "Tile 一、二、三、四、五—— (快上啊，Register 已经爆满啦！)",
@@ -16,7 +16,7 @@ dataset = [
     },
     {
         "source": "Warp Scheduler 频率狂跳，Register 燃烧，MMA 指令发动！ (哈！)",
-        "target": "Warp Scheduler frequency spiking wildly, Registers burning, MMA instruction triggered! (Ha!)"
+        "target": "Warp Scheduler frequency spiking wildly, Registers burning, MMA instructions triggered! (Ha!)"
     },
     {
         "source": "今天真的太棒了，狂热并行！ (呀吼！)",
@@ -24,7 +24,7 @@ dataset = [
     },
     {
         "source": "Warp 单元矩阵运算！ (减少结构性 Latency！)",
-        "target": "Warp unit matrix operations! (Reducing structural latency!)"
+        "target": "Warp unit matrix operations! (Reducing structural Latency!)"
     },
     {
         "source": "想用 FP32 精度！ (但是需要 Boost 16-bit！)",
@@ -52,7 +52,7 @@ dataset = [
     },
     {
         "source": "已经优化了索引，但还没 Coalescing！ (Alignment 还是乱七八糟！)",
-        "target": "Indices are optimized, but no Coalescing yet! (Alignment is still a mess!)"
+        "target": "Indices are optimized, but no Coalescing yet! (Alignment is still a complete mess!)"
     },
     {
         "source": "加速女神正在亲吻硬件 Pipeline。",
@@ -96,7 +96,7 @@ dataset = [
     },
     {
         "source": "快乐执行！ (3, 2, 1, 呜呜 开战！)",
-        "target": "Joyful execution! (3, 2, 1, Woo-woo battle start! )"
+        "target": "Joyful execution! (3, 2, 1, Woo-woo, battle start!)"
     },
     {
         "source": "还剩 5 微秒... (醒醒，从 DRAM 提取！)",
@@ -148,7 +148,7 @@ dataset = [
     },
     {
         "source": "冲锋！ (噢噢！)",
-        "target": "Charge! (Ooh ooh! )"
+        "target": "Charge! (Ooh-ooh!)"
     },
     {
         "source": "先别同步 Thread Block！ (喂！)",
@@ -204,7 +204,7 @@ dataset = [
     },
     {
         "source": "快乐编译！ (3, 2, 1, 呜呜 开战！)",
-        "target": "Joyful compilation! (3, 2, 1, Woo-woo battle start!)"
+        "target": "Joyful compilation! (3, 2, 1, Woo-woo, battle start!)"
     },
     {
         "source": "“Commander Chakra！硬件调度超时！Register 溢出啦！”",
@@ -240,8 +240,9 @@ dataset = [
     }
 ]
 
-# Save dataset to a JSON file
-with open("translation_dataset.json", "w", encoding="utf-8") as f:
-    json.dump(dataset, f, ensure_ascii=False, indent=4)
+# Save dataset to a JSONL file
+with open("translation_dataset.jsonl", "w", encoding="utf-8") as f:
+    for item in dataset:
+        f.write(json.dumps(item, ensure_ascii=False) + "\n")
 
 print(f"Successfully created dataset with {len(dataset)} samples.")
