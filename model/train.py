@@ -1,4 +1,6 @@
 import os
+import numpy as np
+import evaluate
 from datasets import load_dataset
 from transformers import (
     AutoModelForSeq2SeqLM,
@@ -54,7 +56,38 @@ def main():
     # 4. Data collator for sequence-to-sequence tasks
     data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 
+
+    # 4.5. Set up evaluation metrics (BLEU and chrF)
+    metric_sacrebleu = evaluate.load("sacrebleu")
+    metric_chrf = evaluate.load("chrf")
+
+    def compute_metrics(eval_preds):
+        preds, labels = eval_preds
+        if isinstance(preds, tuple):
+            preds = preds[0]
+
+        # Decode predictions
+        decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+
+        # Replace -100 in the labels as we can't decode them
+        labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+        decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+        # Some simple post-processing
+        decoded_preds = [pred.strip() for pred in decoded_preds]
+        decoded_labels = [[label.strip()] for label in decoded_labels]
+
+        # Compute metrics
+        sacrebleu_result = metric_sacrebleu.compute(predictions=decoded_preds, references=decoded_labels)
+        chrf_result = metric_chrf.compute(predictions=decoded_preds, references=decoded_labels)
+
+        return {
+            "bleu": sacrebleu_result["score"],
+            "chrf": chrf_result["score"]
+        }
+
     # 5. Training Arguments
+
     training_args = Seq2SeqTrainingArguments(
         output_dir=os.path.join(script_dir, "opus_zh_en_finetuned"),
         eval_strategy="epoch",
@@ -78,6 +111,7 @@ def main():
         eval_dataset=tokenized_dataset["test"],
         processing_class=tokenizer,
         data_collator=data_collator,
+        compute_metrics=compute_metrics,
     )
 
     # 7. Fine-tune the model
